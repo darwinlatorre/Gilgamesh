@@ -1258,17 +1258,29 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player Camera
       objectReference: {fileID: 0}
+    - target: {fileID: 5385767117842102627, guid: 6b8e8a82d1ee25649a9d082ad00286a8, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5385767117842102627, guid: 6b8e8a82d1ee25649a9d082ad00286a8, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5385767117842102627, guid: 6b8e8a82d1ee25649a9d082ad00286a8, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -15
+      objectReference: {fileID: 0}
     - target: {fileID: 6424767136569068070, guid: 6b8e8a82d1ee25649a9d082ad00286a8, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.3946773
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6424767136569068070, guid: 6b8e8a82d1ee25649a9d082ad00286a8, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.2787131
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6424767136569068070, guid: 6b8e8a82d1ee25649a9d082ad00286a8, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 11.246599
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6424767136569068070, guid: 6b8e8a82d1ee25649a9d082ad00286a8, type: 3}
       propertyPath: m_LocalRotation.w

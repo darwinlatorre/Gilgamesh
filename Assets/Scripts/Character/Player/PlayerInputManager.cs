@@ -11,10 +11,16 @@ namespace GILGAMESH
 
         PlayerControls playerControls;
 
+        [Header("PLAYER MOVEMENT INPUT")]
         [SerializeField] Vector2 movementInput;
         public float verticalInput;
         public float horizontalInput;
         public float moveAmount;
+
+        [Header("CAMERA MOVEMENT INPUT")]
+        [SerializeField] Vector2 cameraInput;
+        public float cameraVerticalInput;
+        public float cameraHorizontalInput;
 
 
         private void Awake()
@@ -58,6 +64,7 @@ namespace GILGAMESH
             {
                 playerControls = new PlayerControls();
                 playerControls.PlayerMovements.Movement.performed += i => movementInput = i.ReadValue<Vector2>();
+                playerControls.PlayerCamera.Movement.performed += i => cameraInput = i.ReadValue<Vector2>();
             }
             playerControls.Enable();
         }
@@ -84,10 +91,11 @@ namespace GILGAMESH
 
         private void Update()
         {
-            HandleMovementInput();
+            HandlePlayerMovementInput();
+            HandleCameraMovementInput();
         }
 
-        private void HandleMovementInput() {
+        private void HandlePlayerMovementInput() {
             verticalInput = movementInput.y;
             horizontalInput = movementInput.x;
             moveAmount = Mathf.Clamp01(Mathf.Abs(horizontalInput) + Mathf.Abs(verticalInput));
@@ -99,6 +107,11 @@ namespace GILGAMESH
             {
                 moveAmount = 1;
             }
+        }
+
+        private void HandleCameraMovementInput() {
+            cameraVerticalInput = cameraInput.y;
+            cameraHorizontalInput = cameraInput.x;
         }
     }
 }

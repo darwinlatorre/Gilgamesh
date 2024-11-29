@@ -3988,6 +3988,7 @@ GameObject:
   - component: {fileID: -1639485218164777177}
   - component: {fileID: -1579176453566480689}
   - component: {fileID: 8758373811258482381}
+  - component: {fileID: -38237285503433141}
   - component: {fileID: -7935516518757983499}
   m_Layer: 0
   m_Name: Player
@@ -4024,7 +4025,7 @@ Animator:
   m_GameObject: {fileID: 6909359599706056850}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 2255221d850daf642981c1a4eedf85a1, type: 3}
-  m_Controller: {fileID: 9100000, guid: ef6403663453e6a4cb106814a81e72b4, type: 2}
+  m_Controller: {fileID: 9100000, guid: b433cc8f349f10b469614368464a975c, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -4090,8 +4091,11 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   networkPosition:
     m_InternalValue: {x: 0, y: 0, z: 0}
+  networkRotation:
+    m_InternalValue: {x: 0, y: 0, z: 0, w: 1}
   networkPositionVelocity: {x: 0, y: 0, z: 0}
   networkPositionSmoothTime: 0.1
+  networkRotationSmoothTime: 0.1
 --- !u!114 &8758373811258482381
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4109,6 +4113,19 @@ MonoBehaviour:
   moveAmount: 0
   waltingSpeed: 2
   runnigSpeed: 5
+  rotationSpeed: 15
+--- !u!114 &-38237285503433141
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6909359599706056850}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b7b2a2de66468341a65412df0782ec3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!143 &-7935516518757983499
 CharacterController:
   m_ObjectHideFlags: 0

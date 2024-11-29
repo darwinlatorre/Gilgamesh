@@ -4,13 +4,19 @@ using Unity.Netcode;
 namespace GILGAMESH {
     public class CharacterManager : NetworkBehaviour
     {
-        public CharacterController characterController;
+        [HideInInspector] public CharacterController characterController;
+        [HideInInspector] public Animator animator;
 
-        CharacterNetworkManager characterNetworkManager;
+        [HideInInspector] public CharacterNetworkManager characterNetworkManager;
+
+        [Header("Flags")]
+        public bool isPerformingAction = false;
+
         protected virtual void Awake()
         {
             DontDestroyOnLoad(this);
             characterController = GetComponent<CharacterController>();
+            animator = GetComponent<Animator>();
             characterNetworkManager = GetComponent<CharacterNetworkManager>();
         }
 

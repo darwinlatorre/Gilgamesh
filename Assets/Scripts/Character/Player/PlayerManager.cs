@@ -4,11 +4,13 @@ namespace GILGAMESH
 {
     public class PlayerManager : CharacterManager
     {
-        PlayerLocomotionManager playerLocomotionManager;
+        [HideInInspector] public PlayerAnimatorManager playerAnimatorManager;
+        [HideInInspector] public PlayerLocomotionManager playerLocomotionManager;
         override protected void Awake()
         {
             base.Awake();
             playerLocomotionManager = GetComponent<PlayerLocomotionManager>();
+            playerAnimatorManager = GetComponent<PlayerAnimatorManager>();
         }
 
         override protected void Update()
@@ -36,6 +38,7 @@ namespace GILGAMESH
             if (IsOwner)
             {
                 PlayerCamera.instance.player = this;
+                PlayerInputManager.intance.player = this;
             }
         }
 

@@ -38,7 +38,7 @@ namespace GILGAMESH
             if (IsOwner)
             {
                 PlayerCamera.instance.player = this;
-                PlayerInputManager.intance.player = this;
+                PlayerInputManager.instance.player = this;
             }
         }
 

@@ -63,9 +63,9 @@ namespace GILGAMESH
         private void HandleRotations()
         {
             //Rota derecha o izquierda dependiendo de la entrada del jugador
-            leftAndRightLookAngle += (PlayerInputManager.intance.cameraHorizontalInput * leftAndRightRotationSpeed) * Time.deltaTime;
+            leftAndRightLookAngle += (PlayerInputManager.instance.cameraHorizontalInput * leftAndRightRotationSpeed) * Time.deltaTime;
             //Rota arriba o abajo dependiendo de la entrada del jugador
-            upAndDownLookAngle -= (PlayerInputManager.intance.cameraVerticalInput * upAndDownRotationSpeed) * Time.deltaTime;
+            upAndDownLookAngle -= (PlayerInputManager.instance.cameraVerticalInput * upAndDownRotationSpeed) * Time.deltaTime;
             //Limita el angulo de rotacion de la camara
             upAndDownLookAngle = Mathf.Clamp(upAndDownLookAngle, minimumPivot, maximumPivot);
 

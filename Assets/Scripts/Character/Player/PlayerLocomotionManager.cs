@@ -1,3 +1,4 @@
+using NUnit.Framework.Internal;
 using UnityEngine;
 
 namespace GILGAMESH
@@ -47,21 +48,25 @@ namespace GILGAMESH
 
         public void HandleAllMovement()
         {
+
             HandleGroundedMovement();
             HandleRotation();
         }
 
-        public void GetMovementValues()
+        private void GetMovementValues()
         {
-            verticalMovement = PlayerInputManager.intance.verticalInput;
-            horizontalMovement = PlayerInputManager.intance.horizontalInput;
-            moveAmount = PlayerInputManager.intance.moveAmount;
+            verticalMovement = PlayerInputManager.instance.verticalInput;
+            horizontalMovement = PlayerInputManager.instance.horizontalInput;
+            moveAmount = PlayerInputManager.instance.moveAmount;
             // CLAMP MOVEMENTS
 
         }
 
         private void HandleGroundedMovement()
         {
+            if(!player.canMove)
+                return;
+
             GetMovementValues();
             //EL MOVIMIENTO ESTA BASADO EN LA DIRECCION DE LA CAMARA
             moveDirection = PlayerCamera.instance.transform.forward * verticalMovement;
@@ -69,10 +74,10 @@ namespace GILGAMESH
             moveDirection.Normalize();
             moveDirection.y = 0;
 
-            if (PlayerInputManager.intance.moveAmount > 0.5f) {
+            if (PlayerInputManager.instance.moveAmount > 0.5f) {
                 player.characterController.Move(moveDirection * runnigSpeed * Time.deltaTime);
             }
-            else if (PlayerInputManager.intance.moveAmount <= 0.5f)
+            else if (PlayerInputManager.instance.moveAmount <= 0.5f)
             {
                 player.characterController.Move(moveDirection * waltingSpeed * Time.deltaTime);
             }
@@ -80,6 +85,8 @@ namespace GILGAMESH
 
         private void HandleRotation()
         {
+            if (!player.canRotate)
+                return;
             targetRotationDirection = Vector3.zero;
             targetRotationDirection = PlayerCamera.instance.cameraObject.transform.forward * verticalMovement;
             targetRotationDirection = targetRotationDirection + PlayerCamera.instance.cameraObject.transform.right * horizontalMovement;
@@ -101,10 +108,10 @@ namespace GILGAMESH
             if (player.isPerformingAction)
                 return;
 
-            if (PlayerInputManager.intance.moveAmount > 0)
+            if (PlayerInputManager.instance.moveAmount > 0)
             {
-                rollDirection = PlayerCamera.instance.cameraObject.transform.forward * PlayerInputManager.intance.verticalInput;
-                rollDirection += PlayerCamera.instance.cameraObject.transform.right * PlayerInputManager.intance.horizontalInput;
+                rollDirection = PlayerCamera.instance.cameraObject.transform.forward * PlayerInputManager.instance.verticalInput;
+                rollDirection += PlayerCamera.instance.cameraObject.transform.right * PlayerInputManager.instance.horizontalInput;
                 rollDirection.y = 0;
                 rollDirection.Normalize();
 
@@ -115,6 +122,7 @@ namespace GILGAMESH
             }
             //Si estamos quietos hacemos un backstep
             else {
+                player.playerAnimatorManager.PlayTargetActionAnimation("Back_Step_01", true, true);
             }
             
         }

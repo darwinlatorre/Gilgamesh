@@ -7,7 +7,7 @@ namespace GILGAMESH
 {
     public class PlayerInputManager : MonoBehaviour
     {
-        public static PlayerInputManager intance;
+        public static PlayerInputManager instance;
         public PlayerManager player;
 
         PlayerControls playerControls;
@@ -29,9 +29,9 @@ namespace GILGAMESH
 
         private void Awake()
         {
-            if (intance == null)
+            if (instance == null)
             {
-                intance = this;
+                instance = this;
             }
             else
             {
@@ -44,7 +44,7 @@ namespace GILGAMESH
             DontDestroyOnLoad(gameObject);
 
             SceneManager.sceneLoaded += OnSceneChange;
-            intance.enabled = false;
+            instance.enabled = false;
         }
 
         private void OnSceneChange(Scene oldScene, LoadSceneMode newScene)
@@ -52,13 +52,13 @@ namespace GILGAMESH
             // ESTAMOS ENTANDO A LA ESCENA DEL MUNDO, HABILITAMOS EL INPUT
             if (oldScene.buildIndex == WorldSaveGameManager.instance.getWorldSceneIndex())
             {
-                intance.enabled = true;
+                instance.enabled = true;
             }
             // ESTAMOS SALIENDO DE LA ESCENA DEL MUNDO, DESHABILITAMOS EL INPUT
             // PARA QUE NO SE PUEDA MOVER EL PERSONAJE, EN UN MENU
             else
             {
-                intance.enabled = false;
+                instance.enabled = false;
             }
         }
 
@@ -138,7 +138,6 @@ namespace GILGAMESH
         private void HandleDodgeInput() {
             if (dodgeInput)
             {
-                //player.playerLocomotionManager.HandleDodge();
                 dodgeInput = false;
                 player.playerLocomotionManager.AttemptToPerformDodge();
             }

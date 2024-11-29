@@ -1490,9 +1490,9 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player Camera (Left & Right)
       objectReference: {fileID: 0}
-    - target: {fileID: 5811328964168433767, guid: 6b8e8a82d1ee25649a9d082ad00286a8, type: 3}
-      propertyPath: collideWithLayers.m_Bits
-      value: 1
+    - target: {fileID: 5385767117842102627, guid: 6b8e8a82d1ee25649a9d082ad00286a8, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -3.5
       objectReference: {fileID: 0}
     - target: {fileID: 6424767136569068070, guid: 6b8e8a82d1ee25649a9d082ad00286a8, type: 3}
       propertyPath: m_LocalPosition.x

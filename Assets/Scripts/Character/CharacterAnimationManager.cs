@@ -1,4 +1,5 @@
 using UnityEngine;
+using Unity.Netcode;
 
 namespace GILGAMESH {
     public class CharacterAnimationManager : MonoBehaviour
@@ -18,10 +19,23 @@ namespace GILGAMESH {
             character.animator.SetFloat("Vertical", verticalValues, 0.1f, Time.deltaTime);
         }
 
-        public virtual void PlayTargetActionAnimation(string targetAnimation, bool isPerformingAction, bool applyRootMotion = true) {
-            character.animator.applyRootMotion = applyRootMotion;
+        public virtual void PlayTargetActionAnimation(
+            string targetAnimation, 
+            bool isPerformingAction, 
+            bool applyRootMotion = true, 
+            bool canRotate = false, 
+            bool canMove = false) {
+            character.applyRootMotion = applyRootMotion;
             character.animator.CrossFade(targetAnimation, 0.2f);
+
             character.isPerformingAction = isPerformingAction;
+            character.canRotate = canRotate;
+            character.canMove = canMove;
+
+            character.characterNetworkManager.NotityTheServerOfActionAnimationServerRpc(
+                NetworkManager.Singleton.LocalClientId,
+                targetAnimation,
+                applyRootMotion);
         }
     }
 }

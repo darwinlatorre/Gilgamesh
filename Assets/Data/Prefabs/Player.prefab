@@ -4076,6 +4076,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   characterController: {fileID: 0}
+  animator: {fileID: 0}
+  characterNetworkManager: {fileID: 0}
+  isPerformingAction: 0
+  canRotate: 1
+  canMove: 1
+  playerAnimatorManager: {fileID: 0}
+  playerLocomotionManager: {fileID: 0}
 --- !u!114 &-1579176453566480689
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4096,6 +4103,12 @@ MonoBehaviour:
   networkPositionVelocity: {x: 0, y: 0, z: 0}
   networkPositionSmoothTime: 0.1
   networkRotationSmoothTime: 0.1
+  verticalMovement:
+    m_InternalValue: 0
+  horizontalMovement:
+    m_InternalValue: 0
+  moveAmount:
+    m_InternalValue: 0
 --- !u!114 &8758373811258482381
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4111,8 +4124,8 @@ MonoBehaviour:
   verticalMovement: 0
   horizontalMovement: 0
   moveAmount: 0
-  waltingSpeed: 2
-  runnigSpeed: 5
+  waltingSpeed: 1.5
+  runnigSpeed: 4.5
   rotationSpeed: 15
 --- !u!114 &-38237285503433141
 MonoBehaviour:

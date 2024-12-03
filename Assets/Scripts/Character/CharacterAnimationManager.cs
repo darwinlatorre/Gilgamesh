@@ -6,17 +6,28 @@ namespace GILGAMESH {
     {
         CharacterManager character;
 
-        float vertical;
-        float horizontal;
+        int vertical;
+        int horizontal;
 
         protected virtual void Awake()
         {
             character = GetComponent<CharacterManager>();
+
+            vertical = Animator.StringToHash("Vertical");
+            horizontal = Animator.StringToHash("Horizontal");
         }
-        public void UpdateAnimatorMovementParameters(float horizontalValues, float verticalValues)
+        public void UpdateAnimatorMovementParameters(float horizontalMovement, float verticalMovement, bool isSprinting)
         {
-            character.animator.SetFloat("Horizontal", horizontalValues, 0.1f, Time.deltaTime);
-            character.animator.SetFloat("Vertical", verticalValues, 0.1f, Time.deltaTime);
+            float horizontalAmount = horizontalMovement;
+            float verticalAmount = verticalMovement;
+
+            if (isSprinting)
+            {
+                verticalAmount = 2;
+            }
+
+            character.animator.SetFloat(horizontal, horizontalAmount, 0.1f, Time.deltaTime);
+            character.animator.SetFloat(vertical, verticalAmount, 0.1f, Time.deltaTime);
         }
 
         public virtual void PlayTargetActionAnimation(
@@ -25,6 +36,7 @@ namespace GILGAMESH {
             bool applyRootMotion = true, 
             bool canRotate = false, 
             bool canMove = false) {
+
             character.applyRootMotion = applyRootMotion;
             character.animator.CrossFade(targetAnimation, 0.2f);
 

@@ -17,6 +17,7 @@ namespace GILGAMESH
         [SerializeField] private float waltingSpeed = 2;
         [SerializeField] private float runnigSpeed = 5;
         [SerializeField] private float rotationSpeed = 15;
+        [SerializeField] private float springtingSpeed = 7f;
 
         [Header("Dodge")]
         private Vector3 rollDirection;
@@ -42,7 +43,7 @@ namespace GILGAMESH
                 moveAmount = player.characterNetworkManager.moveAmount.Value;
 
                 // Si no es el dueño del jugador, actualiza el animator del jugador
-                player.playerAnimatorManager.UpdateAnimatorMovementParameters(0, moveAmount);
+                player.playerAnimatorManager.UpdateAnimatorMovementParameters(0, moveAmount, player.playerNetworkManager.isSprinting.Value);
             }
         }
 
@@ -64,7 +65,7 @@ namespace GILGAMESH
 
         private void HandleGroundedMovement()
         {
-            if(!player.canMove)
+            if (!player.canMove)
                 return;
 
             GetMovementValues();
@@ -74,12 +75,20 @@ namespace GILGAMESH
             moveDirection.Normalize();
             moveDirection.y = 0;
 
-            if (PlayerInputManager.instance.moveAmount > 0.5f) {
-                player.characterController.Move(moveDirection * runnigSpeed * Time.deltaTime);
-            }
-            else if (PlayerInputManager.instance.moveAmount <= 0.5f)
+            if (player.playerNetworkManager.isSprinting.Value)
             {
-                player.characterController.Move(moveDirection * waltingSpeed * Time.deltaTime);
+                player.characterController.Move(moveDirection * springtingSpeed * Time.deltaTime);
+            }
+            else 
+            {
+                if (PlayerInputManager.instance.moveAmount > 0.5f)
+                {
+                    player.characterController.Move(moveDirection * runnigSpeed * Time.deltaTime);
+                }
+                else if (PlayerInputManager.instance.moveAmount <= 0.5f)
+                {
+                    player.characterController.Move(moveDirection * waltingSpeed * Time.deltaTime);
+                }
             }
         }
 
@@ -101,6 +110,24 @@ namespace GILGAMESH
             Quaternion newRotation = Quaternion.LookRotation(targetRotationDirection);
             Quaternion targetRotation = Quaternion.Slerp(transform.rotation, newRotation, rotationSpeed * Time.deltaTime);
             transform.rotation = targetRotation;
+        }
+
+        public void HandleSprinting() 
+        {
+            if (player.isPerformingAction)
+            {
+                player.playerNetworkManager.isSprinting.Value = false;
+            }
+
+            if (moveAmount >= 0.5) {
+                player.playerNetworkManager.isSprinting.Value = true;
+            }
+            else
+            {
+                player.playerNetworkManager.isSprinting.Value = false;
+            }
+
+
         }
 
         public void AttemptToPerformDodge() {

@@ -107,7 +107,16 @@ namespace GILGAMESH
                     ""id"": ""4e552f60-ed2c-4013-b5f0-b861d79622de"",
                     ""expectedControlType"": """",
                     ""processors"": """",
-                    ""interactions"": """",
+                    ""interactions"": ""Tap"",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Sprint"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""175e8e07-3ffd-48a2-a994-bfaa9e502f48"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Hold"",
                     ""initialStateCheck"": false
                 }
             ],
@@ -120,6 +129,17 @@ namespace GILGAMESH
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Dodge"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4f318b5f-603e-4d61-a572-47a9a7ac893c"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Sprint"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -206,6 +226,7 @@ namespace GILGAMESH
             // Player Actions
             m_PlayerActions = asset.FindActionMap("Player Actions", throwIfNotFound: true);
             m_PlayerActions_Dodge = m_PlayerActions.FindAction("Dodge", throwIfNotFound: true);
+            m_PlayerActions_Sprint = m_PlayerActions.FindAction("Sprint", throwIfNotFound: true);
             // Player Camera
             m_PlayerCamera = asset.FindActionMap("Player Camera", throwIfNotFound: true);
             m_PlayerCamera_Movement = m_PlayerCamera.FindAction("Movement", throwIfNotFound: true);
@@ -324,11 +345,13 @@ namespace GILGAMESH
         private readonly InputActionMap m_PlayerActions;
         private List<IPlayerActionsActions> m_PlayerActionsActionsCallbackInterfaces = new List<IPlayerActionsActions>();
         private readonly InputAction m_PlayerActions_Dodge;
+        private readonly InputAction m_PlayerActions_Sprint;
         public struct PlayerActionsActions
         {
             private @PlayerControls m_Wrapper;
             public PlayerActionsActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
             public InputAction @Dodge => m_Wrapper.m_PlayerActions_Dodge;
+            public InputAction @Sprint => m_Wrapper.m_PlayerActions_Sprint;
             public InputActionMap Get() { return m_Wrapper.m_PlayerActions; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -341,6 +364,9 @@ namespace GILGAMESH
                 @Dodge.started += instance.OnDodge;
                 @Dodge.performed += instance.OnDodge;
                 @Dodge.canceled += instance.OnDodge;
+                @Sprint.started += instance.OnSprint;
+                @Sprint.performed += instance.OnSprint;
+                @Sprint.canceled += instance.OnSprint;
             }
 
             private void UnregisterCallbacks(IPlayerActionsActions instance)
@@ -348,6 +374,9 @@ namespace GILGAMESH
                 @Dodge.started -= instance.OnDodge;
                 @Dodge.performed -= instance.OnDodge;
                 @Dodge.canceled -= instance.OnDodge;
+                @Sprint.started -= instance.OnSprint;
+                @Sprint.performed -= instance.OnSprint;
+                @Sprint.canceled -= instance.OnSprint;
             }
 
             public void RemoveCallbacks(IPlayerActionsActions instance)
@@ -418,6 +447,7 @@ namespace GILGAMESH
         public interface IPlayerActionsActions
         {
             void OnDodge(InputAction.CallbackContext context);
+            void OnSprint(InputAction.CallbackContext context);
         }
         public interface IPlayerCameraActions
         {

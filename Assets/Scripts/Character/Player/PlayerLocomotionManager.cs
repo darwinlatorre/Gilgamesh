@@ -18,9 +18,11 @@ namespace GILGAMESH
         [SerializeField] private float runnigSpeed = 5;
         [SerializeField] private float rotationSpeed = 15;
         [SerializeField] private float springtingSpeed = 7f;
+        [SerializeField] private float springtingStaminaCost = 5;
 
         [Header("Dodge")]
         private Vector3 rollDirection;
+        [SerializeField] private float dodgeStaminaCost = 25;
 
         protected override void Awake()
         {
@@ -119,6 +121,12 @@ namespace GILGAMESH
                 player.playerNetworkManager.isSprinting.Value = false;
             }
 
+            if (player.playerNetworkManager.currentStamina.Value <= 0)
+            {
+                player.playerNetworkManager.isSprinting.Value = false;
+                return;
+            }
+
             if (moveAmount >= 0.5) {
                 player.playerNetworkManager.isSprinting.Value = true;
             }
@@ -127,12 +135,19 @@ namespace GILGAMESH
                 player.playerNetworkManager.isSprinting.Value = false;
             }
 
+            if (player.playerNetworkManager.isSprinting.Value)
+            {
+                player.playerNetworkManager.currentStamina.Value -= springtingStaminaCost * Time.deltaTime;
+            }
 
         }
 
         public void AttemptToPerformDodge() {
             //Si no estamos moviento hacemos un roll en la direccion de la camara
             if (player.isPerformingAction)
+                return;
+
+            if (player.playerNetworkManager.currentStamina.Value <= 0)
                 return;
 
             if (PlayerInputManager.instance.moveAmount > 0)
@@ -151,7 +166,9 @@ namespace GILGAMESH
             else {
                 player.playerAnimatorManager.PlayTargetActionAnimation("Back_Step_01", true, true);
             }
-            
+
+            player.playerNetworkManager.currentStamina.Value -= dodgeStaminaCost;
+
         }
     }
 }

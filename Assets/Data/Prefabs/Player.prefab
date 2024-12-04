@@ -3989,6 +3989,7 @@ GameObject:
   - component: {fileID: -1579176453566480689}
   - component: {fileID: 8758373811258482381}
   - component: {fileID: -38237285503433141}
+  - component: {fileID: -4298105141804540790}
   - component: {fileID: -7935516518757983499}
   m_Layer: 0
   m_Name: Player
@@ -4079,10 +4080,13 @@ MonoBehaviour:
   animator: {fileID: 0}
   characterNetworkManager: {fileID: 0}
   isPerformingAction: 0
+  applyRootMotion: 0
   canRotate: 1
   canMove: 1
   playerAnimatorManager: {fileID: 0}
   playerLocomotionManager: {fileID: 0}
+  playerNetworkManager: {fileID: 0}
+  playerStatsManager: {fileID: 0}
 --- !u!114 &-1579176453566480689
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4103,11 +4107,19 @@ MonoBehaviour:
   networkPositionVelocity: {x: 0, y: 0, z: 0}
   networkPositionSmoothTime: 0.1
   networkRotationSmoothTime: 0.1
-  verticalMovement:
-    m_InternalValue: 0
   horizontalMovement:
     m_InternalValue: 0
+  verticalMovement:
+    m_InternalValue: 0
   moveAmount:
+    m_InternalValue: 0
+  isSprinting:
+    m_InternalValue: 0
+  endurance:
+    m_InternalValue: 10
+  currentStamina:
+    m_InternalValue: 0
+  maxStamina:
     m_InternalValue: 0
 --- !u!114 &8758373811258482381
 MonoBehaviour:
@@ -4127,6 +4139,9 @@ MonoBehaviour:
   waltingSpeed: 1.5
   runnigSpeed: 4.5
   rotationSpeed: 15
+  springtingSpeed: 6.5
+  springtingStaminaCost: 1
+  dodgeStaminaCost: 25
 --- !u!114 &-38237285503433141
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4139,6 +4154,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b7b2a2de66468341a65412df0782ec3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-4298105141804540790
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6909359599706056850}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 950717ae42ced654ca9ba04f6e4b4754, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  staminaRegenerationAmount: 2
+  staminaRegenerationDelay: 2
 --- !u!143 &-7935516518757983499
 CharacterController:
   m_ObjectHideFlags: 0

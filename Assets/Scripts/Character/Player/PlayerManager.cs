@@ -5,10 +5,16 @@ namespace GILGAMESH
     public class PlayerManager : CharacterManager
     {
         PlayerLocomotionManager playerLocomotionManager;
+
+
+
+        [HideInInspector] public PlayerInventoryManager playerInventoryManager;
         override protected void Awake()
         {
             base.Awake();
             playerLocomotionManager = GetComponent<PlayerLocomotionManager>();
+
+            playerInventoryManager = GetComponent<PlayerInventoryManager>();
         }
 
         override protected void Update()

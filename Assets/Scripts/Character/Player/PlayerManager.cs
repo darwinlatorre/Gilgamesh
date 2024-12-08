@@ -4,17 +4,26 @@ namespace GILGAMESH
 {
     public class PlayerManager : CharacterManager
     {
+<<<<<<< HEAD
         PlayerLocomotionManager playerLocomotionManager;
 
 
 
         [HideInInspector] public PlayerInventoryManager playerInventoryManager;
+=======
+        [HideInInspector] public PlayerAnimatorManager playerAnimatorManager;
+        [HideInInspector] public PlayerLocomotionManager playerLocomotionManager;
+>>>>>>> e9aa1c18b8d2c12cea23d1d6456e6269c020e490
         override protected void Awake()
         {
             base.Awake();
             playerLocomotionManager = GetComponent<PlayerLocomotionManager>();
+<<<<<<< HEAD
 
             playerInventoryManager = GetComponent<PlayerInventoryManager>();
+=======
+            playerAnimatorManager = GetComponent<PlayerAnimatorManager>();
+>>>>>>> e9aa1c18b8d2c12cea23d1d6456e6269c020e490
         }
 
         override protected void Update()
@@ -42,6 +51,7 @@ namespace GILGAMESH
             if (IsOwner)
             {
                 PlayerCamera.instance.player = this;
+                PlayerInputManager.instance.player = this;
             }
         }
 

@@ -3988,6 +3988,7 @@ GameObject:
   - component: {fileID: -1639485218164777177}
   - component: {fileID: -1579176453566480689}
   - component: {fileID: 8758373811258482381}
+  - component: {fileID: -38237285503433141}
   - component: {fileID: -7935516518757983499}
   - component: {fileID: 4257317169091106759}
   - component: {fileID: -2032956639745025276}
@@ -4026,7 +4027,7 @@ Animator:
   m_GameObject: {fileID: 6909359599706056850}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 2255221d850daf642981c1a4eedf85a1, type: 3}
-  m_Controller: {fileID: 9100000, guid: ef6403663453e6a4cb106814a81e72b4, type: 2}
+  m_Controller: {fileID: 9100000, guid: b433cc8f349f10b469614368464a975c, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -4077,7 +4078,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   characterController: {fileID: 0}
+<<<<<<< HEAD
   playerInventoryManager: {fileID: 0}
+=======
+  animator: {fileID: 0}
+  characterNetworkManager: {fileID: 0}
+  isPerformingAction: 0
+  canRotate: 1
+  canMove: 1
+  playerAnimatorManager: {fileID: 0}
+  playerLocomotionManager: {fileID: 0}
+>>>>>>> e9aa1c18b8d2c12cea23d1d6456e6269c020e490
 --- !u!114 &-1579176453566480689
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4098,6 +4109,15 @@ MonoBehaviour:
   networkPositionVelocity: {x: 0, y: 0, z: 0}
   networkPositionSmoothTime: 0.1
   networkRotationSmoothTime: 0.1
+<<<<<<< HEAD
+=======
+  verticalMovement:
+    m_InternalValue: 0
+  horizontalMovement:
+    m_InternalValue: 0
+  moveAmount:
+    m_InternalValue: 0
+>>>>>>> e9aa1c18b8d2c12cea23d1d6456e6269c020e490
 --- !u!114 &8758373811258482381
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4113,9 +4133,27 @@ MonoBehaviour:
   verticalMovement: 0
   horizontalMovement: 0
   moveAmount: 0
+<<<<<<< HEAD
   waltingSpeed: 2
   runnigSpeed: 5
   rotationSpeed: 15
+=======
+  waltingSpeed: 1.5
+  runnigSpeed: 4.5
+  rotationSpeed: 15
+--- !u!114 &-38237285503433141
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6909359599706056850}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b7b2a2de66468341a65412df0782ec3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+>>>>>>> e9aa1c18b8d2c12cea23d1d6456e6269c020e490
 --- !u!143 &-7935516518757983499
 CharacterController:
   m_ObjectHideFlags: 0

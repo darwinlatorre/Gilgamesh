@@ -6,5 +6,9 @@ namespace GILGAMESH
         protected virtual void Awake()
         {
         }
+
+        protected virtual void Update()
+        {
+        }
     }
 }

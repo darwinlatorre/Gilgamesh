@@ -8,6 +8,9 @@ namespace GILGAMESH
     {
         public static WorldCharactersEffectsManager instance;
 
+        [Header("Damage")]
+        public TakeDamageEffect takeDamageEffect;
+
         [SerializeField] List<InstantCharacterEffect> instantEffects;
 
         private void Awake()
@@ -31,5 +34,4 @@ namespace GILGAMESH
             }
         }
     }
-
 }

@@ -4,10 +4,14 @@ using Unity.Netcode;
 namespace GILGAMESH {
     public class CharacterManager : NetworkBehaviour
     {
+        [Header("Status")]
+        public NetworkVariable<bool> isDead = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+
         [HideInInspector] public CharacterController characterController;
         [HideInInspector] public Animator animator;
 
         [HideInInspector] public CharacterNetworkManager characterNetworkManager;
+        [HideInInspector] public CharacterEffectsManager characterEffectsManager;
 
         [Header("Flags")]
         public bool isPerformingAction = false;
@@ -23,6 +27,7 @@ namespace GILGAMESH {
             characterController = GetComponent<CharacterController>();
             animator = GetComponent<Animator>();
             characterNetworkManager = GetComponent<CharacterNetworkManager>();
+            characterEffectsManager = GetComponent<CharacterEffectsManager>();
         }
 
         protected virtual void Update()

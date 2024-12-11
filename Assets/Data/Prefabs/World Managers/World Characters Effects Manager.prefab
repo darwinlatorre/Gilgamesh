@@ -44,5 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cbe6091b0ab589748ba58f37d1132fda, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  takeDamageEffect: {fileID: 11400000, guid: a419752a1ee060447a5978b42e4a054f, type: 2}
   instantEffects:
   - {fileID: 11400000, guid: be0421891030cfa4e8b28461ebc94b25, type: 2}
+  - {fileID: 11400000, guid: a419752a1ee060447a5978b42e4a054f, type: 2}

@@ -25,6 +25,8 @@ namespace GILGAMESH
 
         [Header("PLAYER ACTIONS INPUT")]
         [SerializeField] bool dodgeInput = false;
+        [SerializeField] bool sprintInput = false;
+        [SerializeField] bool jumpInput = false;
 
 
         private void Awake()
@@ -70,6 +72,12 @@ namespace GILGAMESH
                 playerControls.PlayerMovements.Movement.performed += i => movementInput = i.ReadValue<Vector2>();
                 playerControls.PlayerCamera.Movement.performed += i => cameraInput = i.ReadValue<Vector2>();
                 playerControls.PlayerActions.Dodge.performed += i => dodgeInput = true;
+                playerControls.PlayerActions.Jump.performed += i => jumpInput = true;
+
+                //Maneniendo el boton de sprint, activa el sprint
+                playerControls.PlayerActions.Sprint.performed += i => sprintInput = true;
+                //Soltando el boton de sprint, desactiva el sprint
+                playerControls.PlayerActions.Sprint.canceled += i => sprintInput = false;
             }
             playerControls.Enable();
         }
@@ -103,6 +111,8 @@ namespace GILGAMESH
             HandlePlayerMovementInput();
             HandleCameraMovementInput();
             HandleDodgeInput();
+            HandleSprintInput();
+            HandleJumpInput();
         }
 
         // MOVIMIENTO DEL JUGADOR
@@ -125,7 +135,7 @@ namespace GILGAMESH
             if (player == null)
                 return;
 
-            player.playerAnimatorManager.UpdateAnimatorMovementParameters(0, moveAmount);
+            player.playerAnimatorManager.UpdateAnimatorMovementParameters(0, moveAmount, player.playerNetworkManager.isSprinting.Value);
         }
 
         private void HandleCameraMovementInput() {
@@ -140,6 +150,26 @@ namespace GILGAMESH
             {
                 dodgeInput = false;
                 player.playerLocomotionManager.AttemptToPerformDodge();
+            }
+        }
+
+        private void HandleSprintInput() {
+            if (sprintInput)
+            {
+                player.playerLocomotionManager.HandleSprinting();
+            }
+            else
+            {
+                player.playerNetworkManager.isSprinting.Value = false;
+            }
+        }
+
+        private void HandleJumpInput()
+        {
+            if (jumpInput)
+            {
+                jumpInput = false;
+                player.playerLocomotionManager.AttemptToPerformJump();
             }
         }
     }

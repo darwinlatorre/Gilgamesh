@@ -111,6 +111,15 @@ namespace GILGAMESH
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""Jump"",
+                    ""type"": ""Button"",
+                    ""id"": ""7c120ee4-1580-4e3a-8750-427d02a32c28"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""Sprint"",
                     ""type"": ""PassThrough"",
                     ""id"": ""175e8e07-3ffd-48a2-a994-bfaa9e502f48"",
@@ -129,6 +138,17 @@ namespace GILGAMESH
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Dodge"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""dc1cc1eb-0ddf-436f-9d5a-80263993cd9f"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Jump"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -216,6 +236,34 @@ namespace GILGAMESH
                     ""isPartOfComposite"": true
                 }
             ]
+        },
+        {
+            ""name"": ""UI"",
+            ""id"": ""39baec9e-d1b3-4fe3-9d40-1307d02c729f"",
+            ""actions"": [
+                {
+                    ""name"": ""X"",
+                    ""type"": ""Button"",
+                    ""id"": ""7254e732-db63-453e-8384-50e589f62a38"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": ""Tap"",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""bf3aabe0-9c85-4122-8999-5ae311dd9ddd"",
+                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""X"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -226,10 +274,14 @@ namespace GILGAMESH
             // Player Actions
             m_PlayerActions = asset.FindActionMap("Player Actions", throwIfNotFound: true);
             m_PlayerActions_Dodge = m_PlayerActions.FindAction("Dodge", throwIfNotFound: true);
+            m_PlayerActions_Jump = m_PlayerActions.FindAction("Jump", throwIfNotFound: true);
             m_PlayerActions_Sprint = m_PlayerActions.FindAction("Sprint", throwIfNotFound: true);
             // Player Camera
             m_PlayerCamera = asset.FindActionMap("Player Camera", throwIfNotFound: true);
             m_PlayerCamera_Movement = m_PlayerCamera.FindAction("Movement", throwIfNotFound: true);
+            // UI
+            m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
+            m_UI_X = m_UI.FindAction("X", throwIfNotFound: true);
         }
 
         ~@PlayerControls()
@@ -237,6 +289,7 @@ namespace GILGAMESH
             UnityEngine.Debug.Assert(!m_PlayerMovements.enabled, "This will cause a leak and performance issues, PlayerControls.PlayerMovements.Disable() has not been called.");
             UnityEngine.Debug.Assert(!m_PlayerActions.enabled, "This will cause a leak and performance issues, PlayerControls.PlayerActions.Disable() has not been called.");
             UnityEngine.Debug.Assert(!m_PlayerCamera.enabled, "This will cause a leak and performance issues, PlayerControls.PlayerCamera.Disable() has not been called.");
+            UnityEngine.Debug.Assert(!m_UI.enabled, "This will cause a leak and performance issues, PlayerControls.UI.Disable() has not been called.");
         }
 
         public void Dispose()
@@ -345,12 +398,14 @@ namespace GILGAMESH
         private readonly InputActionMap m_PlayerActions;
         private List<IPlayerActionsActions> m_PlayerActionsActionsCallbackInterfaces = new List<IPlayerActionsActions>();
         private readonly InputAction m_PlayerActions_Dodge;
+        private readonly InputAction m_PlayerActions_Jump;
         private readonly InputAction m_PlayerActions_Sprint;
         public struct PlayerActionsActions
         {
             private @PlayerControls m_Wrapper;
             public PlayerActionsActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
             public InputAction @Dodge => m_Wrapper.m_PlayerActions_Dodge;
+            public InputAction @Jump => m_Wrapper.m_PlayerActions_Jump;
             public InputAction @Sprint => m_Wrapper.m_PlayerActions_Sprint;
             public InputActionMap Get() { return m_Wrapper.m_PlayerActions; }
             public void Enable() { Get().Enable(); }
@@ -364,6 +419,9 @@ namespace GILGAMESH
                 @Dodge.started += instance.OnDodge;
                 @Dodge.performed += instance.OnDodge;
                 @Dodge.canceled += instance.OnDodge;
+                @Jump.started += instance.OnJump;
+                @Jump.performed += instance.OnJump;
+                @Jump.canceled += instance.OnJump;
                 @Sprint.started += instance.OnSprint;
                 @Sprint.performed += instance.OnSprint;
                 @Sprint.canceled += instance.OnSprint;
@@ -374,6 +432,9 @@ namespace GILGAMESH
                 @Dodge.started -= instance.OnDodge;
                 @Dodge.performed -= instance.OnDodge;
                 @Dodge.canceled -= instance.OnDodge;
+                @Jump.started -= instance.OnJump;
+                @Jump.performed -= instance.OnJump;
+                @Jump.canceled -= instance.OnJump;
                 @Sprint.started -= instance.OnSprint;
                 @Sprint.performed -= instance.OnSprint;
                 @Sprint.canceled -= instance.OnSprint;
@@ -440,6 +501,52 @@ namespace GILGAMESH
             }
         }
         public PlayerCameraActions @PlayerCamera => new PlayerCameraActions(this);
+
+        // UI
+        private readonly InputActionMap m_UI;
+        private List<IUIActions> m_UIActionsCallbackInterfaces = new List<IUIActions>();
+        private readonly InputAction m_UI_X;
+        public struct UIActions
+        {
+            private @PlayerControls m_Wrapper;
+            public UIActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
+            public InputAction @X => m_Wrapper.m_UI_X;
+            public InputActionMap Get() { return m_Wrapper.m_UI; }
+            public void Enable() { Get().Enable(); }
+            public void Disable() { Get().Disable(); }
+            public bool enabled => Get().enabled;
+            public static implicit operator InputActionMap(UIActions set) { return set.Get(); }
+            public void AddCallbacks(IUIActions instance)
+            {
+                if (instance == null || m_Wrapper.m_UIActionsCallbackInterfaces.Contains(instance)) return;
+                m_Wrapper.m_UIActionsCallbackInterfaces.Add(instance);
+                @X.started += instance.OnX;
+                @X.performed += instance.OnX;
+                @X.canceled += instance.OnX;
+            }
+
+            private void UnregisterCallbacks(IUIActions instance)
+            {
+                @X.started -= instance.OnX;
+                @X.performed -= instance.OnX;
+                @X.canceled -= instance.OnX;
+            }
+
+            public void RemoveCallbacks(IUIActions instance)
+            {
+                if (m_Wrapper.m_UIActionsCallbackInterfaces.Remove(instance))
+                    UnregisterCallbacks(instance);
+            }
+
+            public void SetCallbacks(IUIActions instance)
+            {
+                foreach (var item in m_Wrapper.m_UIActionsCallbackInterfaces)
+                    UnregisterCallbacks(item);
+                m_Wrapper.m_UIActionsCallbackInterfaces.Clear();
+                AddCallbacks(instance);
+            }
+        }
+        public UIActions @UI => new UIActions(this);
         public interface IPlayerMovementsActions
         {
             void OnMovement(InputAction.CallbackContext context);
@@ -447,11 +554,16 @@ namespace GILGAMESH
         public interface IPlayerActionsActions
         {
             void OnDodge(InputAction.CallbackContext context);
+            void OnJump(InputAction.CallbackContext context);
             void OnSprint(InputAction.CallbackContext context);
         }
         public interface IPlayerCameraActions
         {
             void OnMovement(InputAction.CallbackContext context);
+        }
+        public interface IUIActions
+        {
+            void OnX(InputAction.CallbackContext context);
         }
     }
 }

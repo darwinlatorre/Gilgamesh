@@ -1,4 +1,5 @@
 using NUnit.Framework.Internal;
+using System;
 using UnityEngine;
 
 namespace GILGAMESH
@@ -14,11 +15,18 @@ namespace GILGAMESH
         [Header("Movements Settings")]
         private Vector3 moveDirection;
         private Vector3 targetRotationDirection;
-        [SerializeField] private float waltingSpeed = 2;
-        [SerializeField] private float runnigSpeed = 5;
-        [SerializeField] private float rotationSpeed = 15;
-        [SerializeField] private float springtingSpeed = 7f;
-        [SerializeField] private float springtingStaminaCost = 5;
+        [SerializeField] float waltingSpeed = 2;
+        [SerializeField] float runnigSpeed = 5;
+        [SerializeField] float rotationSpeed = 15;
+        [SerializeField] float springtingSpeed = 7f;
+        [SerializeField] float springtingStaminaCost = 5;
+
+        [Header("Jump")]
+        [SerializeField] float jumpHeight = 4;
+        [SerializeField] float jumpStaminaCost = 25;
+        [SerializeField] float jumpForwardSpeed = 5;
+        [SerializeField] float freeFallSpeed = 2;
+        private Vector3 jumpDirection;
 
         [Header("Dodge")]
         private Vector3 rollDirection;
@@ -51,9 +59,10 @@ namespace GILGAMESH
 
         public void HandleAllMovement()
         {
-
             HandleGroundedMovement();
             HandleRotation();
+            HandleJumpingMovement();
+            HandleFreeFallMovement();
         }
 
         private void GetMovementValues()
@@ -91,6 +100,27 @@ namespace GILGAMESH
                 {
                     player.characterController.Move(moveDirection * waltingSpeed * Time.deltaTime);
                 }
+            }
+        }
+
+        private void HandleJumpingMovement() 
+        {
+            if (player.isJumping)
+            {
+                player.characterController.Move(jumpDirection * jumpForwardSpeed * Time.deltaTime);
+            }
+        }
+
+        private void HandleFreeFallMovement() 
+        {
+            if (!player.isGrounded)
+            {
+                Vector3 freeFallDirection;
+                freeFallDirection = PlayerCamera.instance.transform.forward * PlayerInputManager.instance.verticalInput;
+                freeFallDirection = freeFallDirection + PlayerCamera.instance.transform.right * PlayerInputManager.instance.horizontalInput;
+                freeFallDirection.y = 0;
+
+                player.characterController.Move(freeFallDirection * freeFallSpeed * Time.deltaTime);
             }
         }
 
@@ -170,5 +200,54 @@ namespace GILGAMESH
             player.playerNetworkManager.currentStamina.Value -= dodgeStaminaCost;
 
         }
+
+        public void AttemptToPerformJump()
+        {
+            //Si no estamos moviento hacemos un roll en la direccion de la camara
+            if (player.isPerformingAction)
+                return;
+
+            if (player.playerNetworkManager.currentStamina.Value <= 0)
+                return;
+
+            if (player.isJumping)
+                return;
+
+            if (!player.isGrounded)
+                return;
+
+            player.playerAnimatorManager.PlayTargetActionAnimation("Main_Jump_01", false);
+
+            player.isJumping = true;
+
+            player.playerNetworkManager.currentStamina.Value -= jumpStaminaCost;
+
+            jumpDirection = PlayerCamera.instance.cameraObject.transform.forward * PlayerInputManager.instance.verticalInput;
+            jumpDirection += PlayerCamera.instance.cameraObject.transform.right * PlayerInputManager.instance.horizontalInput;
+
+            jumpDirection.y = 0;
+
+            if (jumpDirection != Vector3.zero)
+            {
+                if (player.playerNetworkManager.isSprinting.Value)
+                {
+                    jumpDirection *= 1;
+                }
+                else if (PlayerInputManager.instance.moveAmount > 0.5)
+                {
+                    jumpDirection *= 0.5f;
+                }
+                else if (PlayerInputManager.instance.moveAmount <= 0.5)
+                {
+                    jumpDirection *= 0.25f;
+                }
+            }
+        }
+
+        public void ApplyJumpingVelocity() 
+        {
+            yVelocity.y = Mathf.Sqrt(jumpHeight * -2 * gravityForce);
+        }
+
     }
 }

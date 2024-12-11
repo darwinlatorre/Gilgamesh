@@ -1,8 +1,10 @@
+using GILGAMESH;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 
 namespace GILGAMESH
 {
-    public class ResetActionFlag : StateMachineBehaviour
+    public class ResetIsJumping : StateMachineBehaviour
     {
         CharacterManager character;
         // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
@@ -12,11 +14,7 @@ namespace GILGAMESH
             {
                 character = animator.GetComponent<CharacterManager>();
             }
-            // Reset the action flag for rolling
-            character.isPerformingAction = false;
-            character.applyRootMotion = false;
-            character.canRotate = true;
-            character.canMove = true;
+
             character.isJumping = false;
         }
 

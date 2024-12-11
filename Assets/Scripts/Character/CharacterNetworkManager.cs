@@ -47,5 +47,10 @@ namespace GILGAMESH
             character.applyRootMotion = applyRootMotion;
             character.animator.CrossFade(animationID, 0.2f);
         }
+
+        public void OnIsMovingChanged(bool oldStatus, bool newStatus)
+        {
+            character.animator.SetBool("isMoving", isMoving.Value);
+        }
     }
 }

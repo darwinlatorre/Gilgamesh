@@ -14,9 +14,9 @@ namespace GILGAMESH
             }
             // Reset the action flag for rolling
             character.isPerformingAction = false;
-            character.applyRootMotion = false;
-            character.canRotate = true;
-            character.canMove = true;
+            character.characterAnimationManager.applyRootMotion = false;
+            character.characterLocomotionManager.canRotate = true;
+            character.characterLocomotionManager.canMove = true;
         }
 
         // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks

@@ -4,16 +4,26 @@ using Unity.Netcode;
 namespace GILGAMESH {
     public class CharacterManager : NetworkBehaviour
     {
+
+        [Header("Status")]
+        public NetworkVariable<bool> isDead = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         [HideInInspector] public CharacterController characterController;
         [HideInInspector] public Animator animator;
 
         [HideInInspector] public CharacterNetworkManager characterNetworkManager;
+        [HideInInspector] public CharacterEffectsManager characterEffectsManager;
+        [HideInInspector] public CharacterAnimationManager characterAnimationManager;
+        [HideInInspector] public CharacterCombatManager characterCombatManager;
+        [HideInInspector] public CharacterSoundFXManager characterSoundFXManager;
+        [HideInInspector] public CharacterLocomotionManager characterLocomotionManager; 
+
+        [Header("Character Group")]
+        public CharacterGroup characterGroup;
 
         [Header("Flags")]
         public bool isPerformingAction = false;
-        public bool applyRootMotion = false;
-        public bool canRotate = true;
-        public bool canMove = true;
+        
+        
 
         protected virtual void Awake()
         {
@@ -45,9 +55,27 @@ namespace GILGAMESH {
             }
         }
 
+        protected virtual void FixedUpdate()
+        {
+
+        }
+
         protected virtual void LateUpdate()
         {
 
+        }
+
+        public override void OnNetworkSpawn()
+        {
+            base.OnNetworkSpawn();
+            animator.SetBool("isMoving", isMoving.Value);
+            characterNetworkManager.isMoving.OnValueChanged += characterNetworkManager.OnIsMovingChanged;
+        }
+
+        public override void OnNetworkDespawn()
+        {
+            base.OnNetworkDespawn();
+            characterNetworkManager.isMoving.OnValueChanged -= characterNetworkManager.OnIsMovingChanged;
         }
     }
 }

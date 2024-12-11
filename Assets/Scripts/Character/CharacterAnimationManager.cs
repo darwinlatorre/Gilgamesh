@@ -1,4 +1,4 @@
-using UnityEngine;
+.using UnityEngine;
 using Unity.Netcode;
 
 namespace GILGAMESH {
@@ -9,6 +9,8 @@ namespace GILGAMESH {
         float vertical;
         float horizontal;
 
+        [Header("Flags")]
+        public bool applyRootMotion = false;
         protected virtual void Awake()
         {
             character = GetComponent<CharacterManager>();

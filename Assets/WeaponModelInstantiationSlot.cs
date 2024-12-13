@@ -7,7 +7,7 @@ namespace GILGAMESH
         public WeaponModelSlot weaponSlot;
         public GameObject currentWeaponModel;
 
-        public void UnoleadWeapon()
+        public void UnloadWeapon()
         {
             if(currentWeaponModel != null)
             {

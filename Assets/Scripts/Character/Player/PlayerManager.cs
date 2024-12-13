@@ -4,11 +4,15 @@ namespace GILGAMESH
 {
     public class PlayerManager : CharacterManager
     {
+        [Header("DEBUN MENU")]
+        [SerializeField] bool switchRightWeapon = false;
+
         [HideInInspector] public PlayerAnimatorManager playerAnimatorManager;
         [HideInInspector] public PlayerLocomotionManager playerLocomotionManager;
         [HideInInspector] public PlayerNetworkManager playerNetworkManager;
         [HideInInspector] public PlayerStatsManager playerStatsManager;
         [HideInInspector] public PlayerInventoryManager playerInventoryManager;
+        [HideInInspector] public PlayerEquipmentManager playerEquipmentManager;
 
         override protected void Awake()
         {
@@ -18,6 +22,7 @@ namespace GILGAMESH
             playerNetworkManager = GetComponent<PlayerNetworkManager>();
             playerStatsManager = GetComponent<PlayerStatsManager>();
             playerInventoryManager = GetComponent<PlayerInventoryManager>();
+            playerEquipmentManager = GetComponent<PlayerEquipmentManager>();
         }
 
         override protected void Update()
@@ -59,6 +64,10 @@ namespace GILGAMESH
                 playerNetworkManager.currentStamina.OnValueChanged += PlayerUIManager.instance.playerUIHudManager.SetNewStaminaValue;
                 playerNetworkManager.currentStamina.OnValueChanged += playerStatsManager.ResetStaminaRegenTimer;
             }
+
+            // EQUIPMENT
+            playerNetworkManager.currentRightHandWeaponID.OnValueChanged += playerNetworkManager.OnCurrentRightHandWeaponIDChange;
+            playerNetworkManager.currentLeftHandWeaponID.OnValueChanged += playerNetworkManager.OnCurrentLeftHandWeaponIDChange;
         }
 
         public void SaveGameDataToCurrentCharacterData(ref CharacterSaveData currentCharacterData) 
@@ -89,6 +98,14 @@ namespace GILGAMESH
             playerNetworkManager.currentHealth.Value = currentCharacterData.currentHealth;
             playerNetworkManager.currentStamina.Value = currentCharacterData.currentStamina;
             PlayerUIManager.instance.playerUIHudManager.SetMaxStaminaValue(playerNetworkManager.maxStamina.Value);
+        }
+    
+        private void DebugMenu()
+        {
+            if (switchRightWeapon) { 
+                switchRightWeapon = false;
+                playerEquipmentManager.SwitchRightWeapon();
+            }
         }
     }
 }

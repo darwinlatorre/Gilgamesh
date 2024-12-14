@@ -11,6 +11,8 @@ namespace GILGAMESH {
 
         [HideInInspector] public PlayerUIHudManager playerUIHudManager;
 
+        [HideInInspector] public PlayerUIPopUpManager playerUIPopUpManager;
+
         private void Awake()
         {
             if (instance == null) {
@@ -22,6 +24,7 @@ namespace GILGAMESH {
             }
 
             playerUIHudManager = GetComponentInChildren<PlayerUIHudManager>();
+            playerUIPopUpManager = GetComponentInChildren<PlayerUIPopUpManager>();
         }
 
         private void Start()

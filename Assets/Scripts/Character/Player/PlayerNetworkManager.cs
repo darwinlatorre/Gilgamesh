@@ -11,13 +11,33 @@ namespace GILGAMESH
         public NetworkVariable<FixedString64Bytes> characterName = new NetworkVariable<FixedString64Bytes>("Character", NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
         [Header("Equipment")]
+        public NetworkVariable<int> currentWeaponBeingUsed = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         public NetworkVariable<int> currentRightHandWeaponID = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         public NetworkVariable<int> currentLeftHandWeaponID = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+
+        public NetworkVariable<bool> isUsingRigthtHand = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        public NetworkVariable<bool> isUsingLeftHand = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+
+
         protected override void Awake()
         {
             base.Awake();
 
             player = GetComponent<PlayerManager>();
+        }
+
+        public void SetCharacterActionsHand(bool rightHandedAction)
+        {
+            if (rightHandedAction) {
+
+                isUsingLeftHand.Value = false;
+                isUsingRigthtHand.Value = true;
+            }
+            else
+            {
+                isUsingLeftHand.Value = true;
+                isUsingRigthtHand.Value = false;
+            }
         }
         public void SetNewMaxHealthValue(int oldVitality, int newVitality)
         {
@@ -46,6 +66,46 @@ namespace GILGAMESH
             WeaponItem newWeapon = Instantiate(WorldItemDatabase.Instance.GetWeaponByID(newID));
             player.playerInventoryManager.currentLeftHandWeapon = newWeapon;
             player.playerEquipmentManager.LoadLeftWeapon();
+        }
+
+        public void OnCurrentWeaponBeingUsedIDChange(int oldID, int newID)
+        {
+            WeaponItem newWeapon = Instantiate(WorldItemDatabase.Instance.GetWeaponByID(newID));
+            player.playerCombatManager.currentWeaponBeingUsed = newWeapon;
+            
+        }
+
+        //ITEMS ACTIONS
+        [ServerRpc]
+        public void NotifyTheServerOfWeaponActionServerRpc(ulong clientID, int actionID, int weaponID)
+        {
+            if (IsServer)
+            {
+                NotifyTheServerOfWeaponActionClientRpc(clientID, actionID, weaponID);
+            }
+        }
+
+        [ClientRpc]
+        public void NotifyTheServerOfWeaponActionClientRpc(ulong clientID, int actionID, int weaponID)
+        {
+            if(clientID != NetworkManager.Singleton.LocalClientId)
+            {
+                PerformWeaponBasedAction(actionID, weaponID);
+            }
+        }
+
+        private void PerformWeaponBasedAction(int actionID, int weaponID)
+        {
+            WeaponItemAction weaponAction = WorldActionManager.instance.GetWeaponItemActionByID(actionID);
+
+            if (weaponAction != null)
+            {
+                weaponAction.AttemptToPerformAction(player, WorldItemDatabase.Instance.GetWeaponByID(weaponID));
+            }
+            else
+            {
+                Debug.LogError("");
+            }
         }
     }
 }

@@ -28,6 +28,8 @@ namespace GILGAMESH
         [SerializeField] bool sprintInput = false;
         [SerializeField] bool jumpInput = false;
 
+        [SerializeField] bool RB_Input = false;
+
 
         private void Awake()
         {
@@ -74,6 +76,8 @@ namespace GILGAMESH
                 playerControls.PlayerActions.Dodge.performed += i => dodgeInput = true;
                 playerControls.PlayerActions.Jump.performed += i => jumpInput = true;
 
+                playerControls.PlayerActions.RB.performed += i => RB_Input = true;
+
                 //Maneniendo el boton de sprint, activa el sprint
                 playerControls.PlayerActions.Sprint.performed += i => sprintInput = true;
                 //Soltando el boton de sprint, desactiva el sprint
@@ -113,6 +117,7 @@ namespace GILGAMESH
             HandleDodgeInput();
             HandleSprintInput();
             HandleJumpInput();
+            HandRBInput();
         }
 
         // MOVIMIENTO DEL JUGADOR
@@ -170,6 +175,20 @@ namespace GILGAMESH
             {
                 jumpInput = false;
                 player.playerLocomotionManager.AttemptToPerformJump();
+            }
+        }
+
+
+
+        private void HandRBInput()
+        {
+            if (RB_Input)
+            {
+                RB_Input = false;
+
+                player.playerNetworkManager.SetCharacterActionsHand(true);
+
+                player.playerCombatManager.PerformWeaponBasedAction(player.playerInventoryManager.currentRightHandWeapon.oh_RB_Action, player.playerInventoryManager.currentRightHandWeapon);
             }
         }
     }

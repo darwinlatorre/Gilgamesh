@@ -120,6 +120,15 @@ namespace GILGAMESH
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""RB"",
+                    ""type"": ""Button"",
+                    ""id"": ""7cb70e63-21f2-42f9-ad9c-7c75fee6007b"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""Sprint"",
                     ""type"": ""PassThrough"",
                     ""id"": ""175e8e07-3ffd-48a2-a994-bfaa9e502f48"",
@@ -149,6 +158,17 @@ namespace GILGAMESH
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e645b91d-8f47-4f07-a769-df74a197e766"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RB"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -275,6 +295,7 @@ namespace GILGAMESH
             m_PlayerActions = asset.FindActionMap("Player Actions", throwIfNotFound: true);
             m_PlayerActions_Dodge = m_PlayerActions.FindAction("Dodge", throwIfNotFound: true);
             m_PlayerActions_Jump = m_PlayerActions.FindAction("Jump", throwIfNotFound: true);
+            m_PlayerActions_RB = m_PlayerActions.FindAction("RB", throwIfNotFound: true);
             m_PlayerActions_Sprint = m_PlayerActions.FindAction("Sprint", throwIfNotFound: true);
             // Player Camera
             m_PlayerCamera = asset.FindActionMap("Player Camera", throwIfNotFound: true);
@@ -399,6 +420,7 @@ namespace GILGAMESH
         private List<IPlayerActionsActions> m_PlayerActionsActionsCallbackInterfaces = new List<IPlayerActionsActions>();
         private readonly InputAction m_PlayerActions_Dodge;
         private readonly InputAction m_PlayerActions_Jump;
+        private readonly InputAction m_PlayerActions_RB;
         private readonly InputAction m_PlayerActions_Sprint;
         public struct PlayerActionsActions
         {
@@ -406,6 +428,7 @@ namespace GILGAMESH
             public PlayerActionsActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
             public InputAction @Dodge => m_Wrapper.m_PlayerActions_Dodge;
             public InputAction @Jump => m_Wrapper.m_PlayerActions_Jump;
+            public InputAction @RB => m_Wrapper.m_PlayerActions_RB;
             public InputAction @Sprint => m_Wrapper.m_PlayerActions_Sprint;
             public InputActionMap Get() { return m_Wrapper.m_PlayerActions; }
             public void Enable() { Get().Enable(); }
@@ -422,6 +445,9 @@ namespace GILGAMESH
                 @Jump.started += instance.OnJump;
                 @Jump.performed += instance.OnJump;
                 @Jump.canceled += instance.OnJump;
+                @RB.started += instance.OnRB;
+                @RB.performed += instance.OnRB;
+                @RB.canceled += instance.OnRB;
                 @Sprint.started += instance.OnSprint;
                 @Sprint.performed += instance.OnSprint;
                 @Sprint.canceled += instance.OnSprint;
@@ -435,6 +461,9 @@ namespace GILGAMESH
                 @Jump.started -= instance.OnJump;
                 @Jump.performed -= instance.OnJump;
                 @Jump.canceled -= instance.OnJump;
+                @RB.started -= instance.OnRB;
+                @RB.performed -= instance.OnRB;
+                @RB.canceled -= instance.OnRB;
                 @Sprint.started -= instance.OnSprint;
                 @Sprint.performed -= instance.OnSprint;
                 @Sprint.canceled -= instance.OnSprint;
@@ -555,6 +584,7 @@ namespace GILGAMESH
         {
             void OnDodge(InputAction.CallbackContext context);
             void OnJump(InputAction.CallbackContext context);
+            void OnRB(InputAction.CallbackContext context);
             void OnSprint(InputAction.CallbackContext context);
         }
         public interface IPlayerCameraActions

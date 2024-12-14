@@ -70,10 +70,13 @@ namespace GILGAMESH
         }
 
         public void SwitchRightWeapon() { 
-               if(!player.IsOwner)
-                { return; }
 
-            player.playerAnimatorManager.PlayTargetActionAnimation("Swap_Right_Weapon_01", false, true, true, true);
+            if(!player.IsOwner)
+            {
+                return;
+            }
+            Debug.Log("ANTES DE LA ANIMACION");
+            player.playerAnimatorManager.PlayTargetActionAnimation("Swap_R_Weapon", false);
 
             WeaponItem selectedWeapon = null;
 

@@ -1,5 +1,8 @@
 using UnityEngine;
 using Unity.Netcode;
+using System.Collections;
+using NUnit.Framework;
+using System.Collections.Generic;
 
 namespace GILGAMESH {
     public class CharacterManager : NetworkBehaviour
@@ -12,6 +15,8 @@ namespace GILGAMESH {
 
         [HideInInspector] public CharacterNetworkManager characterNetworkManager;
         [HideInInspector] public CharacterEffectsManager characterEffectsManager;
+
+        [HideInInspector] public CharacterAnimationManager characterAnimatorManager;
 
         [Header("Flags")]
         public bool isPerformingAction = false;
@@ -28,8 +33,14 @@ namespace GILGAMESH {
             animator = GetComponent<Animator>();
             characterNetworkManager = GetComponent<CharacterNetworkManager>();
             characterEffectsManager = GetComponent<CharacterEffectsManager>();
+
+            characterAnimatorManager = GetComponent<CharacterAnimationManager>();
         }
 
+        protected virtual void Start()
+        {
+            IgnoreMyOnColliders();
+        }
         protected virtual void Update()
         {
             animator.SetBool("IsGrounded", isGrounded);
@@ -56,6 +67,50 @@ namespace GILGAMESH {
         protected virtual void LateUpdate()
         {
 
+        }
+
+
+        public virtual IEnumerator ProcessDeathEvent(bool manyallySelectedDeathAnimation = false) {
+
+            if (IsOwner)
+            {
+                characterNetworkManager.currentHealth.Value = 0;
+                isDead.Value = true;
+
+                if (!manyallySelectedDeathAnimation)
+                {
+                    characterAnimatorManager.PlayTargetActionAnimation("Dead_01", true);
+                }
+            }
+
+            yield return new WaitForSeconds(5);
+        }
+
+        public virtual void ReviveCharacter() { }
+
+
+        protected virtual void IgnoreMyOnColliders()
+        {
+
+            Collider characterControllerCollider = GetComponent<Collider>();
+            Collider[] damageableCharacterColliders = GetComponentsInChildren<Collider>();
+            List<Collider> ignoreColliders = new List<Collider>();
+
+            foreach (var collider in damageableCharacterColliders)
+            {
+                ignoreColliders.Add(collider);
+            }
+
+            ignoreColliders.Add(characterControllerCollider);
+
+            foreach (var collider in ignoreColliders)
+            {
+                foreach (var otherCollider in ignoreColliders)
+                {
+                    Physics.IgnoreCollision(collider, otherCollider, true);
+                }
+            }
+            
         }
     }
 }

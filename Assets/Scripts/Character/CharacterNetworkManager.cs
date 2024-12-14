@@ -23,7 +23,7 @@ namespace GILGAMESH
         public NetworkVariable<bool> isSprinting = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
         [Header("Resources")]
-        public NetworkVariable<float> currentHealth = new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        public NetworkVariable<int> currentHealth = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         public NetworkVariable<int> maxHealth = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         public NetworkVariable<float> currentStamina = new NetworkVariable<float>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         public NetworkVariable<int> maxStamina = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
@@ -35,6 +35,23 @@ namespace GILGAMESH
         protected virtual void Awake()
         {
             character = GetComponent<CharacterManager>();
+        }
+
+        public void CheckHP(int oldValue, int newValue)
+        {
+
+            if(currentHealth.Value <= 0)
+            {
+                StartCoroutine(character.ProcessDeathEvent());
+            }
+
+            //prevnest us form over healing
+            if (character.IsOwner)
+            {
+                if (currentHealth.Value > maxHealth.Value) { 
+                    currentHealth.Value = maxHealth.Value;
+                }
+            }
         }
 
         [ServerRpc]
@@ -60,5 +77,32 @@ namespace GILGAMESH
             character.applyRootMotion = applyRootMotion;
             character.animator.CrossFade(animationID, 0.2f);
         }
+
+        //
+        [ServerRpc]
+        public void NotityTheServerOfAttackActionAnimationServerRpc(ulong clientID, string animationID, bool applyRootMotion)
+        {
+            if (IsServer)
+            {
+                PlayAttackActionAnimationForAllClientsClientRpc(clientID, animationID, applyRootMotion);
+            }
+        }
+
+        [ClientRpc]
+        public void PlayAttackActionAnimationForAllClientsClientRpc(ulong clientID, string animationID, bool applyRootMotion)
+        {
+            if (clientID != NetworkManager.Singleton.LocalClientId)
+            {
+                PerformAttackActionAnimationFromServer(animationID, applyRootMotion);
+            }
+
+        }
+
+        private void PerformAttackActionAnimationFromServer(string animationID, bool applyRootMotion)
+        {
+            character.applyRootMotion = applyRootMotion;
+            character.animator.CrossFade(animationID, 0.2f);
+        }
     }
+
 }

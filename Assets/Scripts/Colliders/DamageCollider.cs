@@ -6,6 +6,9 @@ namespace GILGAMESH
 {
     public class DamageCollider : MonoBehaviour
     {
+        [Header("Collider")]
+        protected Collider damageCollider;
+
         [Header("Damage")]
         public float physicalDamage = 0;
         public float magicDamage = 0;
@@ -21,7 +24,7 @@ namespace GILGAMESH
 
         private void OnTriggerEnter(Collider other)
         {
-            CharacterManager damageTarget = other.GetComponent<CharacterManager>();
+            CharacterManager damageTarget = other.GetComponentInParent<CharacterManager>();
 
             if (damageTarget != null)
             {
@@ -57,5 +60,14 @@ namespace GILGAMESH
 
             damageTarget.characterEffectsManager.ProcessInstantEffect(damageEffect);
         }
+
+        public virtual void EnableDamageCollider() {
+            damageCollider.enabled = true;
+        }
+        public virtual void DisableDamageCollider() {
+            damageCollider.enabled = false;
+            charactersDamaged.Clear();
+        }
+   
     }
 }
